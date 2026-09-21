@@ -3,39 +3,203 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Italiano Vivo — Học tiếng Ý</title>
+  <title>Impara l'Italiano – Học Tiếng Ý</title>
+  <meta name="description" content="Học tiếng Ý miễn phí với flashcard từ vựng theo chủ đề cho người mới bắt đầu (A1-A2). Cách học vui vẻ, hiệu quả!" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="bg-glow" aria-hidden="true"></div>
-  <header class="topbar">
-    <a class="brand" href="#/" data-nav>
-      <span class="brand-flag" aria-hidden="true"></span>
-      <span>
-        <strong>Italiano Vivo</strong>
-        <small>Học tiếng Ý mỗi ngày</small>
-      </span>
-    </a>
-    <nav class="nav">
-      <a href="#/" data-nav>Trang chủ</a>
-      <a href="#/lessons" data-nav>Bài học</a>
-      <a href="#/flashcards" data-nav>Flashcard</a>
-      <a href="#/quiz" data-nav>Quiz</a>
-      <a href="#/phrases" data-nav>Mẫu câu</a>
+
+  <!-- HEADER / NAV -->
+  <header class="header" id="header">
+    <nav class="nav container">
+      <div class="nav__logo">
+        <span class="logo-flag">🇮🇹</span>
+        <span class="logo-text">Impara</span>
+      </div>
+      <ul class="nav__menu" id="navMenu">
+        <li><a href="#home" class="nav__link active" onclick="showSection('home')">Trang chủ</a></li>
+        <li><a href="#topics" class="nav__link" onclick="showSection('topics')">Chủ đề</a></li>
+        <li><a href="#progress" class="nav__link" onclick="showSection('progress')">Tiến trình</a></li>
+      </ul>
+      <div class="nav__streak">
+        <span class="streak-fire">🔥</span>
+        <span class="streak-count" id="streakCount">0</span>
+      </div>
     </nav>
-    <div class="xp-chip" id="xpChip">0 XP</div>
   </header>
 
-  <main id="app"></main>
+  <!-- HOME SECTION -->
+  <section class="section section--home" id="home">
+    <div class="hero container">
+      <div class="hero__content">
+        <div class="hero__badge">✨ Dành cho người mới — A1 & A2</div>
+        <h1 class="hero__title">
+          Ciao! Học<br />
+          <span class="gradient-text">Tiếng Ý</span><br />
+          Ngay Hôm Nay
+        </h1>
+        <p class="hero__desc">Khám phá từ vựng tiếng Ý qua flashcard thú vị. Học theo chủ đề, ghi nhớ dễ dàng, mỗi ngày một ít — tiến bộ thấy rõ!</p>
+        <div class="hero__actions">
+          <button class="btn btn--primary" onclick="showSection('topics')">
+            <span>Bắt đầu học</span>
+            <span>→</span>
+          </button>
+          <div class="hero__stats">
+            <div class="stat">
+              <span class="stat__num">200+</span>
+              <span class="stat__label">Từ vựng</span>
+            </div>
+            <div class="stat__divider"></div>
+            <div class="stat">
+              <span class="stat__num">8</span>
+              <span class="stat__label">Chủ đề</span>
+            </div>
+            <div class="stat__divider"></div>
+            <div class="stat">
+              <span class="stat__num">Free</span>
+              <span class="stat__label">Miễn phí</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero__image">
+        <img src="italian_hero.jpg" alt="Học tiếng Ý - Impara l'italiano" class="hero__img" />
+        <div class="hero__img-glow"></div>
+      </div>
+    </div>
 
-  <footer class="footer">
-    <p>Italiano Vivo · Phát âm bằng giọng Ý trên trình duyệt · Tiến độ lưu trên máy bạn</p>
-  </footer>
+    <!-- Topics Preview -->
+    <div class="topics-preview container" id="topicsPreview">
+      <h2 class="section-title">Chọn Chủ Đề Học</h2>
+      <p class="section-subtitle">8 chủ đề từ vựng cơ bản, dành cho người mới bắt đầu</p>
+      <div class="topics-grid" id="topicsGrid"></div>
+    </div>
+  </section>
 
-  <script src="data.js"></script>
+  <!-- FLASHCARD SECTION -->
+  <section class="section section--hidden" id="flashcard-section">
+    <div class="container">
+      <div class="flashcard-header">
+        <button class="btn-back" onclick="showSection('topics')">← Quay lại</button>
+        <div class="flashcard-topic-info">
+          <span class="topic-emoji" id="cardTopicEmoji"></span>
+          <span class="topic-name" id="cardTopicName"></span>
+        </div>
+        <div class="card-counter">
+          <span id="currentCard">1</span> / <span id="totalCards">0</span>
+        </div>
+      </div>
+
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <!-- The Card -->
+      <div class="flashcard-scene" id="flashcardScene" onclick="flipCard()">
+        <div class="flashcard" id="flashcard">
+          <div class="flashcard__face flashcard__face--front">
+            <div class="card-lang">🇮🇹 Italiano</div>
+            <div class="card-word" id="cardWordIT"></div>
+            <div class="card-phonetic" id="cardPhonetic"></div>
+            <div class="card-tap-hint">Chạm để xem nghĩa →</div>
+          </div>
+          <div class="flashcard__face flashcard__face--back">
+            <div class="card-lang">🇻🇳 Tiếng Việt</div>
+            <div class="card-word" id="cardWordVN"></div>
+            <div class="card-example" id="cardExample"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="flashcard-controls">
+        <button class="ctrl-btn ctrl-btn--skip" id="skipBtn" onclick="nextCard(false)">
+          <span class="ctrl-icon">✗</span>
+          <span>Chưa nhớ</span>
+        </button>
+        <button class="ctrl-btn ctrl-btn--prev" onclick="prevCard()">
+          <span class="ctrl-icon">←</span>
+        </button>
+        <button class="ctrl-btn ctrl-btn--next" onclick="nextCard(true)">
+          <span class="ctrl-icon">✓</span>
+          <span>Đã nhớ!</span>
+        </button>
+      </div>
+
+      <!-- Mini known list -->
+      <div class="known-words-wrap" id="knownWrap">
+        <p class="known-title">✅ Đã nhớ hôm nay:</p>
+        <div class="known-tags" id="knownTags"></div>
+      </div>
+    </div>
+
+    <!-- Completion Modal -->
+    <div class="modal-overlay" id="completionModal">
+      <div class="modal">
+        <div class="modal-firework">🎉</div>
+        <h2 class="modal-title">Tuyệt vời!</h2>
+        <p class="modal-desc" id="modalDesc"></p>
+        <div class="modal-stats">
+          <div class="modal-stat">
+            <span class="modal-stat-num" id="modalKnown">0</span>
+            <span class="modal-stat-label">Đã nhớ</span>
+          </div>
+          <div class="modal-stat">
+            <span class="modal-stat-num" id="modalTotal">0</span>
+            <span class="modal-stat-label">Tổng từ</span>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn--secondary" onclick="restartTopic()">🔄 Học lại</button>
+          <button class="btn btn--primary" onclick="showSection('topics')">Chủ đề khác →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOPICS SECTION -->
+  <section class="section section--hidden" id="topics">
+    <div class="container">
+      <div class="page-header">
+        <h1 class="page-title">📚 Chọn Chủ Đề</h1>
+        <p class="page-subtitle">Chọn một chủ đề để bắt đầu học flashcard</p>
+      </div>
+      <div class="topics-grid" id="topicsGridMain"></div>
+    </div>
+  </section>
+
+  <!-- PROGRESS SECTION -->
+  <section class="section section--hidden" id="progress">
+    <div class="container">
+      <div class="page-header">
+        <h1 class="page-title">📊 Tiến Trình Của Bạn</h1>
+        <p class="page-subtitle">Theo dõi hành trình học tiếng Ý</p>
+      </div>
+      <div class="progress-overview">
+        <div class="progress-card">
+          <div class="progress-card-icon">🔥</div>
+          <div class="progress-card-num" id="streakDisplay">0</div>
+          <div class="progress-card-label">Ngày liên tiếp</div>
+        </div>
+        <div class="progress-card">
+          <div class="progress-card-icon">⭐</div>
+          <div class="progress-card-num" id="totalLearnedDisplay">0</div>
+          <div class="progress-card-label">Từ đã học</div>
+        </div>
+        <div class="progress-card">
+          <div class="progress-card-icon">✅</div>
+          <div class="progress-card-num" id="topicsCompletedDisplay">0</div>
+          <div class="progress-card-label">Chủ đề hoàn thành</div>
+        </div>
+      </div>
+      <h2 class="section-title" style="margin-top:2.5rem;">Chi Tiết Từng Chủ Đề</h2>
+      <div class="topic-progress-list" id="topicProgressList"></div>
+    </div>
+  </section>
+
   <script src="app.js"></script>
 </body>
 </html>
